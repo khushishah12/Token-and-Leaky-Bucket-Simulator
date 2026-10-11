@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Token Bucket & Leaky Bucket Simulation | Computer Networks Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header / Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">Token Bucket & Leaky Bucket Simulation</h1>
+          <p class="brand-subtitle">Interactive Computer Networks Traffic Shaping and Congestion Control Simulator</p>
+        </div>
+      </div>
+
+      <nav class="nav-tabs" role="tablist">
+        <button class="nav-tab active" data-tab="overview" role="tab" id="nav-tab-overview">
+          <span class="tab-icon">🏠</span> Overview
+        </button>
+        <button class="nav-tab" data-tab="token-bucket" role="tab" id="nav-tab-tb">
+          <span class="tab-icon">🟢</span> Token Bucket
+        </button>
+        <button class="nav-tab" data-tab="leaky-bucket" role="tab" id="nav-tab-lb">
+          <span class="tab-icon">💧</span> Leaky Bucket
+        </button>
+        <button class="nav-tab" data-tab="compare" role="tab" id="nav-tab-compare">
+          <span class="tab-icon">⚖️</span> Compare Algorithms
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- ========================================================================= -->
+    <!-- SECTION 1: OVERVIEW / LANDING PAGE -->
+    <!-- ========================================================================= -->
+    <section id="tab-overview" class="tab-pane active">
+      <div class="hero-section">
+        <div class="hero-badge">B.Tech Computer Science & Engineering • Traffic Shaping Lab</div>
+        <h2 class="hero-title">Traffic Shaping & Rate Limiting Simulation Platform</h2>
+        <p class="hero-description">
+          In packet-switched networks, unregulated burst traffic causes buffer overflow, packet drops, and severe latency. 
+          <strong>Traffic Shaping</strong> algorithms regulate average transmission rate and burstiness before packets enter the subnet.
+          Explore how <strong>Token Bucket</strong> and <strong>Leaky Bucket</strong> operate step-by-step with real-time mathematical breakdowns.
+        </p>
+
+        <div class="algorithm-cards-grid">
+          <!-- Token Bucket Card -->
+          <div class="algo-card token-card" onclick="switchTab('token-bucket')">
+            <div class="algo-card-badge">Burst-Friendly Shaper</div>
+            <div class="algo-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+            </div>
+            <h3 class="algo-card-title">Token Bucket Algorithm</h3>
+            <p class="algo-card-desc">
+              Controls traffic by generating and consuming tokens. Packets can be transmitted when sufficient tokens are available, allowing <strong>controlled bursts</strong> while enforcing an average rate limit.
+            </p>
+            <ul class="algo-features">
+              <li>✓ Allows short bursts at full line speed</li>
+              <li>✓ Discards tokens (not packets) when bucket overflows</li>
+              <li>✓ Tokens replenish at a steady constant rate \(R\)</li>
+            </ul>
+            <div class="algo-card-action">
+              <span>Launch Token Bucket Simulator</span>
+              <span class="arrow">&rarr;</span>
+            </div>
+          </div>
+
+          <!-- Leaky Bucket Card -->
+          <div class="algo-card leaky-card" onclick="switchTab('leaky-bucket')">
+            <div class="algo-card-badge">Constant-Rate Shaper</div>
+            <div class="algo-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+              </svg>
+            </div>
+            <h3 class="algo-card-title">Leaky Bucket Algorithm</h3>
+            <p class="algo-card-desc">
+              Controls traffic by transmitting packets at a strictly <strong>fixed output rate</strong>. Incoming packets are placed in a finite queue, and excess packets are dropped when the buffer overflows.
+            </p>
+            <ul class="algo-features">
+              <li>✓ Converts bursty traffic into a smooth, constant stream</li>
+              <li>✓ Fixed leak rate regardless of arrival spikes</li>
+              <li>✓ Drops packets when queue capacity is exceeded</li>
+            </ul>
+            <div class="algo-card-action">
+              <span>Launch Leaky Bucket Simulator</span>
+              <span class="arrow">&rarr;</span>
+            </div>
+          </div>
+
+          <!-- Side-by-Side Compare Card -->
+          <div class="algo-card compare-card" onclick="switchTab('compare')">
+            <div class="algo-card-badge">Comparative Analysis</div>
+            <div class="algo-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
+              </svg>
+            </div>
+            <h3 class="algo-card-title">Side-by-Side Comparison</h3>
+            <p class="algo-card-desc">
+              Feed identical packet burst sequences into both algorithms concurrently. Observe the direct contrast in packet delay, output rate smoothness, and queue occupancy with an intuitive traffic trajectory.
+            </p>
+            <ul class="algo-features">
+              <li>✓ Synchronous dual-algorithm execution</li>
+              <li>✓ Live Traffic Shaping Trajectory (Burst vs Smooth)</li>
+              <li>✓ Synchronized step-by-step comparison table</li>
+            </ul>
+            <div class="algo-card-action">
+              <span>Open Comparison Simulator</span>
+              <span class="arrow">&rarr;</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Architecture Summary -->
+        <div class="architecture-summary">
+          <h3 class="section-heading">Key Concept at a Glance</h3>
+          <div class="summary-grid">
+            <div class="summary-box">
+              <div class="box-tag">Token Bucket Model</div>
+              <p><strong>Bucket holds:</strong> Tokens (credits for transmission)</p>
+              <p><strong>Input:</strong> Periodic tokens generated + variable packets</p>
+              <p><strong>Output:</strong> Bursty or steady packets (if tokens exist)</p>
+              <p><strong>Overflow action:</strong> Excess tokens are discarded; packets wait or drop</p>
+            </div>
+            <div class="summary-box">
+              <div class="box-tag">Leaky Bucket Model</div>
+              <p><strong>Bucket holds:</strong> Packets / Raw Data waiting in FIFO queue</p>
+              <p><strong>Input:</strong> Bursty, irregular packet arrivals</p>
+              <p><strong>Output:</strong> Strictly constant packet rate leaking from bottom</p>
+              <p><strong>Overflow action:</strong> Excess incoming packets are dropped immediately</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 2: TOKEN BUCKET SIMULATION -->
+    <!-- ========================================================================= -->
+    <section id="tab-token-bucket" class="tab-pane">
+      <div class="sim-header">
+        <div>
+          <h2 class="sim-title">Token Bucket Algorithm Simulation</h2>
+          <p class="sim-subtitle">Simulate token generation, token accumulation, and credit-based packet transmission step-by-step.</p>
+        </div>
+        <div class="scenario-selector-wrap">
+          <label for="tb-preset">Predefined Scenario:</label>
+          <select id="tb-preset" class="form-select" onchange="loadPreset('tb', this.value)">
+            <option value="normal">Scenario 1: Normal Traffic (Default Lab)</option>
+            <option value="burst">Scenario 2: Burst Traffic (Tokens Exhaustion)</option>
+            <option value="overflow">Scenario 3: Bucket Token Overflow</option>
+            <option value="low-rate">Scenario 4: Low Token Generation (Starvation)</option>
+            <option value="custom">Custom Configuration</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Current Step Notification Ribbon -->
+      <div id="tb-step-ribbon" class="step-ribbon">
+        <div class="ribbon-col">
+          <span class="ribbon-label">SIMULATION TIME</span>
+          <span class="ribbon-value" id="tb-ribbon-time">T = 0</span>
+        </div>
+        <div class="ribbon-col">
+          <span class="ribbon-label">INCOMING PACKET</span>
+          <span class="ribbon-value" id="tb-ribbon-packet">None</span>
+        </div>
+        <div class="ribbon-col">
+          <span class="ribbon-label">TOKENS BEFORE / AVAIL</span>
+          <span class="ribbon-value" id="tb-ribbon-tokens">0 / 0</span>
+        </div>
+        <div class="ribbon-col">
+          <span class="ribbon-label">DECISION / ACTION</span>
+          <span class="ribbon-value status-badge" id="tb-ribbon-action">Ready</span>
+        </div>
+        <div class="ribbon-col">
+          <span class="ribbon-label">REMAINING TOKENS</span>
+          <span class="ribbon-value" id="tb-ribbon-after">0</span>
+        </div>
+      </div>
+
+      <!-- Two-Column Side-by-Side Simulation Workspace -->
+      <div class="sim-layout">
+        <!-- Left Column: Parameters, Arrival Schedule, Controls & Animated Visualizer -->
+        <div class="sim-col-interactive">
+          <div class="card config-card">
+            <h3 class="card-title">1. Algorithm Parameters & Controls</h3>
+            <div class="input-grid">
+              <div class="form-group">
+                <label for="tb-cap">Bucket Capacity (\(C\)):</label>
+                <div class="input-with-unit">
+                  <input type="number" id="tb-cap" min="1" max="50" value="10" class="form-input">
+                  <span class="unit">tokens</span>
+                </div>
+                <small class="field-hint">Max tokens the bucket can hold</small>
+              </div>
+
+              <div class="form-group">
+                <label for="tb-init">Initial Tokens (\(T_0\)):</label>
+                <div class="input-with-unit">
+                  <input type="number" id="tb-init" min="0" max="50" value="5" class="form-input">
+                  <span class="unit">tokens</span>
+                </div>
+                <small class="field-hint">Tokens present at Time = 0</small>
+              </div>
+
+              <div class="form-group">
+                <label for="tb-rate">Token Generation Rate (\(R\)):</label>
+                <div class="input-with-unit">
+                  <input type="number" id="tb-rate" min="1" max="20" value="3" class="form-input">
+                  <span class="unit">tokens/step</span>
+                </div>
+                <small class="field-hint">Tokens added every time unit</small>
+              </div>
+            </div>
+
+            <div class="packet-list-header">
+              <h4 class="sub-title">Packet Arrival Schedule</h4>
+              <button class="btn btn-sm btn-outline" onclick="addPacketRow('tb')">+ Add Packet</button>
+            </div>
+
+            <div class="table-responsive packet-table-wrap">
+              <table class="packet-input-table" id="tb-packet-table">
+                <thead>
+                  <tr>
+                    <th>Packet</th>
+                    <th>Arrival Time (\(t\))</th>
+                    <th>Size (Tokens)</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="tb-packet-tbody">
+                  <!-- Dynamic rows -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="control-panel">
+              <h4 class="sub-title">Simulation Controls</h4>
+              <div class="btn-group">
+                <button id="tb-btn-next" class="btn btn-primary" onclick="stepTokenBucket()">
+                  <span class="btn-icon">⏭</span> Next Step
+                </button>
+                <button id="tb-btn-run" class="btn btn-success" onclick="runTokenBucket()">
+                  <span class="btn-icon">▶</span> Run All
+                </button>
+                <button id="tb-btn-pause" class="btn btn-warning" onclick="pauseTokenBucket()" disabled>
+                  <span class="btn-icon">⏸</span> Pause
+                </button>
+                <button id="tb-btn-reset" class="btn btn-danger" onclick="resetTokenBucket()">
+                  <span class="btn-icon">↺</span> Reset
+                </button>
+              </div>
+
+              <div class="speed-control">
+                <label>Simulation Speed:</label>
+                <div class="speed-options">
+                  <button class="speed-btn" data-speed="1600" onclick="setSpeed('tb', 1600, this)">Slow (1.6s)</button>
+                  <button class="speed-btn active" data-speed="800" onclick="setSpeed('tb', 800, this)">Normal (0.8s)</button>
+                  <button class="speed-btn" data-speed="350" onclick="setSpeed('tb', 350, this)">Fast (0.35s)</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bucket & Packet Animation Canvas -->
+          <div class="card visual-card">
+            <h3 class="card-title">2. Real-Time Token Bucket Visualizer</h3>
+            
+            <div class="pipeline-visual">
+              <!-- Packet Generator Source -->
+              <div class="pipeline-node source-node">
+                <div class="node-icon">📦</div>
+                <div class="node-title">Packet Source</div>
+                <div class="node-meta" id="tb-source-status">Idle</div>
+                <div id="tb-flying-packet" class="flying-packet hidden"></div>
+              </div>
+
+              <!-- Connection Arrow 1 -->
+              <div class="pipeline-connector">
+                <div class="connector-line"></div>
+                <span class="connector-arrow">&rarr;</span>
+              </div>
+
+              <!-- Token Bucket Container -->
+              <div class="pipeline-node bucket-node">
+                <div class="token-tap">
+                  <div class="tap-head">🚰 Token Tap</div>
+                  <div class="tap-rate" id="tb-tap-rate">+3 tokens/t</div>
+                  <div id="tb-falling-tokens" class="falling-tokens-stream"></div>
+                </div>
+
+                <div class="bucket-container" id="tb-bucket-visual">
+                  <div class="bucket-rim"></div>
+                  <div class="bucket-body">
+                    <div class="tokens-grid" id="tb-tokens-grid">
+                      <!-- Rendered token badges -->
+                    </div>
+                  </div>
+                  <div class="bucket-base"></div>
+                </div>
+
+                <div class="bucket-occupancy">
+                  <div class="occupancy-bar-bg">
+                    <div class="occupancy-bar-fill" id="tb-occupancy-bar" style="width: 50%;"></div>
+                  </div>
+                  <div class="occupancy-text" id="tb-occupancy-text">Tokens: 5 / 10</div>
+                </div>
+              </div>
+
+              <!-- Connection Arrow 2 -->
+              <div class="pipeline-connector">
+                <div class="connector-line"></div>
+                <span class="connector-arrow">&rarr;</span>
+              </div>
+
+              <!-- Transmission Decision Gate & Network -->
+              <div class="pipeline-node network-node">
+                <div class="node-icon">🌐</div>
+                <div class="node-title">Destination Network</div>
+                <div class="network-status" id="tb-network-status">Listening...</div>
+                <div class="transmission-counter">
+                  Transmitted: <span id="tb-stat-transmitted-badge" class="count-badge count-success">0</span>
+                </div>
+                <div class="dropped-counter">
+                  Dropped: <span id="tb-stat-dropped-badge" class="count-badge count-danger">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Step-by-Step Execution Table (Visible Alongside the Simulation!) + Math Breakdown -->
+        <div class="sim-col-data">
+          <!-- Step-by-Step Execution Table -->
+          <div class="card table-card">
+            <div class="card-header-flex">
+              <h3 class="card-title" style="margin-bottom:0;">3. Step-by-Step Execution Table</h3>
+              <span class="badge badge-info" id="tb-table-step-count">0 Steps</span>
+            </div>
+            <div class="table-responsive sim-table-scroll">
+              <table class="output-table" id="tb-output-table">
+                <thead>
+                  <tr>
+                    <th>Time (\(t\))</th>
+                    <th>Packet</th>
+                    <th>Arrival</th>
+                    <th>Size</th>
+                    <th>Tokens Before</th>
+                    <th>Gen</th>
+                    <th>Avail</th>
+                    <th>Action</th>
+                    <th>Tokens After</th>
+                    <th>Decision Formula & Reasoning</th>
+                  </tr>
+                </thead>
+                <tbody id="tb-output-tbody">
+                  <!-- Output populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Step-by-Step Mathematical Explanation Panel -->
+          <div class="card explanation-card">
+            <div class="explanation-header">
+              <h3 class="card-title">4. Step Breakdown & Mathematical Justification</h3>
+              <span class="badge badge-info" id="tb-step-tag">Step 0</span>
+            </div>
+            <div class="explanation-content" id="tb-explanation-body">
+              <div class="empty-state">
+                <p>Click <strong>"Next Step"</strong> or <strong>"Run All"</strong> to begin the simulation. Detailed calculations for token generation, capacity limits, credit checks, and packet transmission decisions will appear here alongside the live animation and table.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Event Log & Real-time Stats -->
+      <div class="sim-bottom-grid">
+        <!-- Event Log -->
+        <div class="card log-card">
+          <div class="card-header-flex">
+            <h3 class="card-title">5. Real-Time Event Log</h3>
+            <button class="btn btn-xs btn-outline" onclick="clearEventLog('tb')">Clear Log</button>
+          </div>
+          <div class="event-log-container" id="tb-event-log">
+            <div class="log-entry log-info">
+              <span class="log-time">[System]</span>
+              <span class="log-msg">Token Bucket Simulator ready. Configured with Capacity = 10, Initial = 5, Rate = 3 tokens/time unit.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Statistics Dashboard -->
+        <div class="card stats-card">
+          <h3 class="card-title">6. Performance Statistics & Metrics</h3>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <span class="stat-label">Total Packets</span>
+              <span class="stat-val" id="tb-stat-total">0</span>
+            </div>
+            <div class="stat-box stat-success">
+              <span class="stat-label">Packets Transmitted</span>
+              <span class="stat-val" id="tb-stat-trans">0</span>
+            </div>
+            <div class="stat-box stat-danger">
+              <span class="stat-label">Packets Dropped</span>
+              <span class="stat-val" id="tb-stat-drop">0</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Total Tokens Generated</span>
+              <span class="stat-val" id="tb-stat-gen">0</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Total Tokens Consumed</span>
+              <span class="stat-val" id="tb-stat-cons">0</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Drop Rate (%)</span>
+              <span class="stat-val" id="tb-stat-droprate">0.0%</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Effective Throughput</span>
+              <span class="stat-val" id="tb-stat-throughput">0.00 pkts/t</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Token Utilization</span>
+              <span class="stat-val" id="tb-stat-util">0.0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Completion Summary Banner (Hidden until finished) -->
+      <div id="tb-summary-banner" class="summary-banner hidden">
+        <!-- Dynamic post-simulation conclusions -->
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 3: LEAKY BUCKET SIMULATION -->
+    <!-- ========================================================================= -->
+    <section id="tab-leaky-bucket" class="tab-pane">
+      <div class="sim-header">
+        <div>
+          <h2 class="sim-title">Leaky Bucket Algorithm Simulation</h2>
+          <p class="sim-subtitle">Simulate finite packet queue buffering, overflow detection, and constant-rate packet leakage step-by-step.</p>
+        </div>
+        <div class="scenario-selector-wrap">
+          <label for="lb-preset">Predefined Scenario:</label>
+          <select id="lb-preset" class="form-select" onchange="loadPreset('lb', this.value)">
+            <option value="normal">Scenario 1: Normal Traffic (Default Lab)</option>
+            <option value="burst">Scenario 2: Burst Overflow (Packet Dropping)</option>
+            <option value="high-leak">Scenario 3: High Leak Rate (Rapid Drain)</option>
+            <option value="slow-leak">Scenario 4: Low Leak Rate (Backlog Accumulation)</option>
+            <option value="custom">Custom Configuration</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Leaky Bucket Ribbon -->
+      <div id="lb-step-ribbon" class="step-ribbon ribbon-blue">
+        <div class="ribbon-col">
+          <span class="ribbon-label">SIMULATION TIME</span>
+          <span class="ribbon-value" id="lb-ribbon-time">T = 0</span>
+        </div>
+        <div class="ribbon-col">
+          <span class="ribbon-label">INCOMING PACKET</span>
+          <span class="ribbon-value" id="lb-ribbon-packet">None</span>
+        </div>
+        <div class="ribbon-col">
+          <span class="ribbon-label">QUEUE BEFORE / CAP</span>
+          <span class="ribbon-value" id="lb-ribbon-queue">0 / 0</span>
+        </div>
+        <div class="ribbon-col">
+          <span class="ribbon-label">DECISION / ACTION</span>
+          <span class="ribbon-value status-badge" id="lb-ribbon-action">Ready</span>
+        </div>
+        <div class="ribbon-col">
+          <span class="ribbon-label">DATA LEAKED / AFTER</span>
+          <span class="ribbon-value" id="lb-ribbon-leaked">0 sent (Q: 0)</span>
+        </div>
+      </div>
+
+      <!-- Two-Column Side-by-Side Simulation Workspace -->
+      <div class="sim-layout">
+        <!-- Left Column: Parameters, Arrival Schedule, Controls & Visualizer -->
+        <div class="sim-col-interactive">
+          <div class="card config-card">
+            <h3 class="card-title">1. Algorithm Parameters & Controls</h3>
+            <div class="input-grid">
+              <div class="form-group">
+                <label for="lb-cap">Bucket/Queue Capacity (\(B\)):</label>
+                <div class="input-with-unit">
+                  <input type="number" id="lb-cap" min="1" max="50" value="10" class="form-input">
+                  <span class="unit">units</span>
+                </div>
+                <small class="field-hint">Max queue size before packet drop</small>
+              </div>
+
+              <div class="form-group">
+                <label for="lb-leak">Output / Leak Rate (\(L\)):</label>
+                <div class="input-with-unit">
+                  <input type="number" id="lb-leak" min="1" max="20" value="3" class="form-input">
+                  <span class="unit">units/step</span>
+                </div>
+                <small class="field-hint">Fixed data transmitted per time step</small>
+              </div>
+            </div>
+
+            <div class="packet-list-header">
+              <h4 class="sub-title">Packet Arrival Schedule</h4>
+              <button class="btn btn-sm btn-outline" onclick="addPacketRow('lb')">+ Add Packet</button>
+            </div>
+
+            <div class="table-responsive packet-table-wrap">
+              <table class="packet-input-table" id="lb-packet-table">
+                <thead>
+                  <tr>
+                    <th>Packet</th>
+                    <th>Arrival Time (\(t\))</th>
+                    <th>Size (Units)</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="lb-packet-tbody">
+                  <!-- Dynamic rows -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="control-panel">
+              <h4 class="sub-title">Simulation Controls</h4>
+              <div class="btn-group">
+                <button id="lb-btn-next" class="btn btn-primary" onclick="stepLeakyBucket()">
+                  <span class="btn-icon">⏭</span> Next Step
+                </button>
+                <button id="lb-btn-run" class="btn btn-success" onclick="runLeakyBucket()">
+                  <span class="btn-icon">▶</span> Run All
+                </button>
+                <button id="lb-btn-pause" class="btn btn-warning" onclick="pauseLeakyBucket()" disabled>
+                  <span class="btn-icon">⏸</span> Pause
+                </button>
+                <button id="lb-btn-reset" class="btn btn-danger" onclick="resetLeakyBucket()">
+                  <span class="btn-icon">↺</span> Reset
+                </button>
+              </div>
+
+              <div class="speed-control">
+                <label>Simulation Speed:</label>
+                <div class="speed-options">
+                  <button class="speed-btn" data-speed="1600" onclick="setSpeed('lb', 1600, this)">Slow (1.6s)</button>
+                  <button class="speed-btn active" data-speed="800" onclick="setSpeed('lb', 800, this)">Normal (0.8s)</button>
+                  <button class="speed-btn" data-speed="350" onclick="setSpeed('lb', 350, this)">Fast (0.35s)</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Real-Time Leaky Bucket Visualizer -->
+          <div class="card visual-card">
+            <h3 class="card-title">2. Real-Time Leaky Bucket Visualizer</h3>
+
+            <div class="pipeline-visual vertical-responsive">
+              <!-- Incoming packets from above -->
+              <div class="leaky-ingress-wrap">
+                <div class="ingress-label">Incoming Traffic Stream</div>
+                <div id="lb-flying-packet" class="flying-packet-lb hidden"></div>
+              </div>
+
+              <!-- Leaky Funnel Container -->
+              <div class="leaky-bucket-structure">
+                <div class="leaky-funnel-top">
+                  <span>Queue Buffer Entrance</span>
+                </div>
+                
+                <div class="leaky-body-container" id="lb-bucket-visual">
+                  <div class="queue-packets-stack" id="lb-queue-stack">
+                    <!-- Dynamic packet segments inside queue -->
+                  </div>
+                  <div class="water-fill" id="lb-water-fill" style="height: 0%;"></div>
+                </div>
+
+                <!-- Bottom Constant-rate Leak Nozzle -->
+                <div class="leaky-bottom-nozzle">
+                  <div class="nozzle-pipe"></div>
+                  <div class="leak-droplets-stream" id="lb-leak-stream">
+                    <span class="water-drop">💧</span>
+                  </div>
+                  <div class="leak-rate-indicator">Constant Leak Rate: <strong id="lb-leak-rate-text">3 units/t</strong></div>
+                </div>
+
+                <div class="bucket-occupancy">
+                  <div class="occupancy-bar-bg">
+                    <div class="occupancy-bar-fill fill-blue" id="lb-occupancy-bar" style="width: 0%;"></div>
+                  </div>
+                  <div class="occupancy-text" id="lb-occupancy-text">Queue: 0 / 10 units</div>
+                </div>
+              </div>
+
+              <!-- Outflow / Egress Network -->
+              <div class="leaky-egress-wrap">
+                <div class="node-icon">🌐</div>
+                <div class="node-title">Regulated Constant-Rate Network</div>
+                <div class="network-status" id="lb-network-status">Receiving smooth traffic...</div>
+                <div class="status-indicators-row">
+                  <span class="badge badge-success">Data Sent: <strong id="lb-stat-sent-units">0</strong> units</span>
+                  <span class="badge badge-danger">Dropped: <strong id="lb-stat-drop-units">0</strong> pkts</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Step-by-Step Execution Table (Visible Alongside the Simulation!) + Math Breakdown -->
+        <div class="sim-col-data">
+          <!-- Execution Table -->
+          <div class="card table-card">
+            <div class="card-header-flex">
+              <h3 class="card-title" style="margin-bottom:0;">3. Step-by-Step Execution Table</h3>
+              <span class="badge badge-info" id="lb-table-step-count">0 Steps</span>
+            </div>
+            <div class="table-responsive sim-table-scroll">
+              <table class="output-table" id="lb-output-table">
+                <thead>
+                  <tr>
+                    <th>Time (\(t\))</th>
+                    <th>Packet</th>
+                    <th>Size</th>
+                    <th>Queue Before</th>
+                    <th>Incoming</th>
+                    <th>Capacity (\(B\))</th>
+                    <th>Accepted / Dropped</th>
+                    <th>Data Sent</th>
+                    <th>Queue After</th>
+                    <th>Mathematical Reasoning</th>
+                  </tr>
+                </thead>
+                <tbody id="lb-output-tbody">
+                  <!-- Output populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Step Explanation Panel -->
+          <div class="card explanation-card">
+            <div class="explanation-header">
+              <h3 class="card-title">4. Step Breakdown & Mathematical Justification</h3>
+              <span class="badge badge-info" id="lb-step-tag">Step 0</span>
+            </div>
+            <div class="explanation-content" id="lb-explanation-body">
+              <div class="empty-state">
+                <p>Click <strong>"Next Step"</strong> or <strong>"Run All"</strong> to simulate. Step-by-step queue calculations, overflow checks (\(Q_{\text{prev}} + \text{Size} \le B\)), and fixed-rate leakage math will appear here alongside the live visualizer and execution table.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Log & Statistics -->
+      <div class="sim-bottom-grid">
+        <div class="card log-card">
+          <div class="card-header-flex">
+            <h3 class="card-title">5. Real-Time Event Log</h3>
+            <button class="btn btn-xs btn-outline" onclick="clearEventLog('lb')">Clear Log</button>
+          </div>
+          <div class="event-log-container" id="lb-event-log">
+            <div class="log-entry log-info">
+              <span class="log-time">[System]</span>
+              <span class="log-msg">Leaky Bucket Simulator ready. Queue Capacity = 10, Output Rate = 3 units/time step.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card stats-card">
+          <h3 class="card-title">6. Performance Statistics & Metrics</h3>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <span class="stat-label">Total Packets Arrived</span>
+              <span class="stat-val" id="lb-stat-total">0</span>
+            </div>
+            <div class="stat-box stat-success">
+              <span class="stat-label">Packets Accepted</span>
+              <span class="stat-val" id="lb-stat-acc">0</span>
+            </div>
+            <div class="stat-box stat-danger">
+              <span class="stat-label">Packets Dropped</span>
+              <span class="stat-val" id="lb-stat-drop">0</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Total Data Received</span>
+              <span class="stat-val" id="lb-stat-rec">0 units</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Total Data Transmitted</span>
+              <span class="stat-val" id="lb-stat-sent">0 units</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Packet Drop Rate</span>
+              <span class="stat-val" id="lb-stat-droprate">0.0%</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Avg Queue Occupancy</span>
+              <span class="stat-val" id="lb-stat-avgqueue">0.0 units</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Average Delay / Latency</span>
+              <span class="stat-val" id="lb-stat-avgdelay">0.0 steps</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="lb-summary-banner" class="summary-banner hidden">
+        <!-- Dynamic conclusions -->
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 4: COMPARISON MODE (REVAMPED TRAJECTORY & EXECUTION TABLE) -->
+    <!-- ========================================================================= -->
+    <section id="tab-compare" class="tab-pane">
+      <div class="sim-header">
+        <div>
+          <h2 class="sim-title">Token Bucket vs. Leaky Bucket: Comparative Simulator</h2>
+          <p class="sim-subtitle">Evaluate how both algorithms shape the exact same bursty traffic. Observe instantaneous burst transmission vs. smoothed constant rate leakage.</p>
+        </div>
+        <div class="scenario-selector-wrap">
+          <label for="cmp-preset">Traffic Pattern:</label>
+          <select id="cmp-preset" class="form-select" onchange="loadPreset('cmp', this.value)">
+            <option value="burst">Spike Bursts (Immediate vs Leaked)</option>
+            <option value="normal">Standard Mixed Traffic</option>
+            <option value="heavy">Continuous Heavy Burst</option>
+            <option value="custom">Custom Schedule</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Synchronized Comparison Ribbon -->
+      <div id="cmp-step-ribbon" class="step-ribbon ribbon-purple">
+        <div class="ribbon-col">
+          <span class="ribbon-label">SIMULATION TIME</span>
+          <span class="ribbon-value" id="cmp-ribbon-time">T = 0</span>
+        </div>
+        <div class="ribbon-col">
+          <span class="ribbon-label">INCOMING TRAFFIC</span>
+          <span class="ribbon-value" id="cmp-ribbon-packet">None</span>
+        </div>
+        <div class="ribbon-col">
+          <span class="ribbon-label">TOKEN BUCKET OUTPUT</span>
+          <span class="ribbon-value" id="cmp-ribbon-tb">0 units (Idle)</span>
+        </div>
+        <div class="ribbon-col">
+          <span class="ribbon-label">LEAKY BUCKET OUTPUT</span>
+          <span class="ribbon-value" id="cmp-ribbon-lb">0 units (Idle)</span>
+        </div>
+        <div class="ribbon-col">
+          <span class="ribbon-label">TRAFFIC SHAPING CONTRAST</span>
+          <span class="ribbon-value status-badge" id="cmp-ribbon-status">Ready</span>
+        </div>
+      </div>
+
+      <!-- Two-Column Side-by-Side Comparison Workspace -->
+      <div class="sim-layout">
+        <!-- Left Column: Shared Configuration, Controls & Algorithm State Gauges -->
+        <div class="sim-col-interactive">
+          <div class="card config-card">
+            <h3 class="card-title">1. Shared Traffic Configuration & Controls</h3>
+            <div class="compare-config-grid">
+              <div class="form-group">
+                <label>Token Bucket Capacity (\(C\)):</label>
+                <div class="input-with-unit">
+                  <input type="number" id="cmp-tb-cap" value="10" min="1" max="50" class="form-input">
+                  <span class="unit">tokens</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Token Rate (\(R\)):</label>
+                <div class="input-with-unit">
+                  <input type="number" id="cmp-tb-rate" value="3" min="1" max="20" class="form-input">
+                  <span class="unit">tok/t</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Leaky Bucket Capacity (\(B\)):</label>
+                <div class="input-with-unit">
+                  <input type="number" id="cmp-lb-cap" value="10" min="1" max="50" class="form-input">
+                  <span class="unit">units</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Leaky Output Rate (\(L\)):</label>
+                <div class="input-with-unit">
+                  <input type="number" id="cmp-lb-rate" value="3" min="1" max="20" class="form-input">
+                  <span class="unit">units/t</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="packet-list-header mt-3">
+              <h4 class="sub-title">Shared Packet Arrival Schedule</h4>
+              <button class="btn btn-sm btn-outline" onclick="addPacketRow('cmp')">+ Add Packet</button>
+            </div>
+
+            <div class="table-responsive packet-table-wrap">
+              <table class="packet-input-table" id="cmp-packet-table">
+                <thead>
+                  <tr>
+                    <th>Packet</th>
+                    <th>Arrival (\(t\))</th>
+                    <th>Size (Units)</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="cmp-packet-tbody">
+                  <!-- Shared packet list -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Simulation Controls -->
+            <div class="control-panel">
+              <h4 class="sub-title">Simulation Controls</h4>
+              <div class="btn-group">
+                <button id="cmp-btn-next" class="btn btn-primary" onclick="stepDualSimulation()">
+                  <span class="btn-icon">⏭</span> Next Step
+                </button>
+                <button id="cmp-btn-run" class="btn btn-success" onclick="runDualSimulation()">
+                  <span class="btn-icon">▶</span> Run All
+                </button>
+                <button id="cmp-btn-pause" class="btn btn-warning" onclick="pauseDualSimulation()" disabled>
+                  <span class="btn-icon">⏸</span> Pause
+                </button>
+                <button id="cmp-btn-reset" class="btn btn-danger" onclick="resetDualSimulation()">
+                  <span class="btn-icon">↺</span> Reset Both
+                </button>
+              </div>
+
+              <div class="speed-control">
+                <label>Simulation Speed:</label>
+                <div class="speed-options">
+                  <button class="speed-btn" data-speed="1400" onclick="setSpeed('cmp', 1400, this)">Slow (1.4s)</button>
+                  <button class="speed-btn active" data-speed="700" onclick="setSpeed('cmp', 700, this)">Normal (0.7s)</button>
+                  <button class="speed-btn" data-speed="350" onclick="setSpeed('cmp', 350, this)">Fast (0.35s)</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live State Gauges: Token Reservoir vs Queue Backlog -->
+          <div class="card visual-card">
+            <h3 class="card-title">2. Internal Algorithm State Comparison</h3>
+            <div class="dual-gauges-grid">
+              <!-- Token Bucket Mini State -->
+              <div class="mini-algo-state tb-mini-state">
+                <div class="mini-state-header">
+                  <div class="mini-title-wrap">
+                    <span class="algo-dot dot-tb"></span>
+                    <strong>Token Bucket</strong>
+                  </div>
+                  <span class="badge badge-success" id="cmp-tb-status">Ready</span>
+                </div>
+                <div class="mini-gauge-wrap">
+                  <div class="gauge-label">
+                    <span>Available Tokens:</span>
+                    <strong id="cmp-tb-tokens-val">5 / 10</strong>
+                  </div>
+                  <div class="occupancy-bar-bg">
+                    <div class="occupancy-bar-fill" id="cmp-tb-gauge-bar" style="width: 50%;"></div>
+                  </div>
+                </div>
+                <div class="mini-stat-pills">
+                  <span class="pill pill-success">Transmitted: <strong id="cmp-tb-trans-val">0</strong></span>
+                  <span class="pill pill-danger">Dropped: <strong id="cmp-tb-drop-val">0</strong></span>
+                </div>
+              </div>
+
+              <!-- Leaky Bucket Mini State -->
+              <div class="mini-algo-state lb-mini-state">
+                <div class="mini-state-header">
+                  <div class="mini-title-wrap">
+                    <span class="algo-dot dot-lb"></span>
+                    <strong>Leaky Bucket</strong>
+                  </div>
+                  <span class="badge badge-info" id="cmp-lb-status">Ready</span>
+                </div>
+                <div class="mini-gauge-wrap">
+                  <div class="gauge-label">
+                    <span>Queue Buffer Backlog:</span>
+                    <strong id="cmp-lb-queue-val">0 / 10</strong>
+                  </div>
+                  <div class="occupancy-bar-bg">
+                    <div class="occupancy-bar-fill fill-blue" id="cmp-lb-gauge-bar" style="width: 0%;"></div>
+                  </div>
+                </div>
+                <div class="mini-stat-pills">
+                  <span class="pill pill-success">Transmitted: <strong id="cmp-lb-trans-val">0</strong></span>
+                  <span class="pill pill-danger">Dropped: <strong id="cmp-lb-drop-val">0</strong></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Intuitive Traffic Shaping Trajectory & Synchronized Comparison Table -->
+        <div class="sim-col-data">
+          <!-- Trajectory Chart Card -->
+          <div class="card trajectory-card">
+            <div class="card-header-flex">
+              <h3 class="card-title" style="margin-bottom:0;">3. Traffic Shaping Trajectory: Burst vs Smoothed Output</h3>
+              <div class="trajectory-legend">
+                <span class="legend-item"><span class="legend-color legend-incoming"></span> Ingress Traffic</span>
+                <span class="legend-item"><span class="legend-color legend-tb"></span> Token Bucket (Bursts Allowed)</span>
+                <span class="legend-item"><span class="legend-color legend-lb"></span> Leaky Bucket (Constant Rate)</span>
+              </div>
+            </div>
+            <p class="trajectory-subtitle">Directly observe the rate-shaping difference over time: Token Bucket spikes to transmit bursts instantaneously; Leaky Bucket caps output at \(L\) and spreads packets over subsequent time steps.</p>
+            
+            <div class="trajectory-canvas-wrap">
+              <canvas id="cmp-trajectory-chart" width="700" height="230"></canvas>
+            </div>
+
+            <div class="trajectory-insight-box" id="cmp-insight-box">
+              <span class="insight-icon">💡</span>
+              <span id="cmp-insight-text">Click <strong>"Next Step"</strong> or <strong>"Run All"</strong> to generate the live traffic shaping trajectory and compare burst responsiveness.</span>
+            </div>
+          </div>
+
+          <!-- Synchronized Step Comparison Table (Visible Alongside Simulation!) -->
+          <div class="card table-card">
+            <div class="card-header-flex">
+              <h3 class="card-title" style="margin-bottom:0;">4. Synchronized Step Comparison Table</h3>
+              <span class="badge badge-info" id="cmp-table-step-count">0 Steps</span>
+            </div>
+            <div class="table-responsive sim-table-scroll">
+              <table class="output-table comparison-exec-table" id="cmp-output-table">
+                <thead>
+                  <tr>
+                    <th>Time (\(t\))</th>
+                    <th>Packet In</th>
+                    <th>Token Bucket (Sent / Tok)</th>
+                    <th>Leaky Bucket (Sent / Queue)</th>
+                    <th>Traffic Shaping Difference & Delay Impact</th>
+                  </tr>
+                </thead>
+                <tbody id="cmp-output-tbody">
+                  <!-- Output populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison Metrics & Side-by-Side Summary -->
+      <div class="card table-card mt-4">
+        <h3 class="card-title">5. Comprehensive Algorithm Comparison Matrix</h3>
+        <div class="table-responsive">
+          <table class="comparison-matrix-table">
+            <thead>
+              <tr>
+                <th>Feature / Metric</th>
+                <th>Token Bucket Algorithm</th>
+                <th>Leaky Bucket Algorithm</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Traffic Handling</strong></td>
+                <td>Allows controlled bursts of traffic up to the bucket capacity (\(C\)).</td>
+                <td>Smooths traffic into a rigid, constant-rate stream.</td>
+              </tr>
+              <tr>
+                <td><strong>Output Transmission Rate</strong></td>
+                <td>Variable: can transmit at peak interface line speed if sufficient tokens exist.</td>
+                <td>Fixed: data leaves bucket strictly at rate \(L\) units per time step.</td>
+              </tr>
+              <tr>
+                <td><strong>Buffer Contents</strong></td>
+                <td>Holds virtual <strong>tokens</strong> (transmission permissions).</td>
+                <td>Holds actual <strong>packets / data units</strong> in a FIFO buffer.</td>
+              </tr>
+              <tr>
+                <td><strong>Overflow Action</strong></td>
+                <td>Excess tokens are discarded with <em>zero data loss</em> when bucket is full.</td>
+                <td>Excess packets arriving to a full queue are <strong>dropped</strong>.</td>
+              </tr>
+              <tr>
+                <td><strong>Burst Transmission Condition</strong></td>
+                <td>Max burst size = \(C + R \cdot \Delta t\) (instantaneous burst = \(C\)).</td>
+                <td>Burst is buffered and serialized over multiple time intervals.</td>
+              </tr>
+              <tr>
+                <td><strong>Packet Delay / Latency</strong></td>
+                <td>Low latency for burst packets when tokens are pre-accumulated.</td>
+                <td>Higher queuing latency because packets must wait for the fixed leak rate.</td>
+              </tr>
+              <tr>
+                <td><strong>Typical Real-World Use</strong></td>
+                <td>Bursty applications (HTTP/web browsing, dynamic API rate limiting, video streaming).</td>
+                <td>Constant bit-rate streams (VoIP voice calls, ATM networks, strict ISP policing).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div>
+        <strong>Computer Networks Traffic Shaping Laboratory Simulation</strong>
+        <p>Interactive educational platform designed for B.Tech CSE / IT networking curriculum.</p>
+      </div>
+      <div class="footer-meta">
+        <span>Standards: RFC 2212 (Token Bucket) • RFC 2211 (Leaky Bucket / Guaranteed Service)</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
